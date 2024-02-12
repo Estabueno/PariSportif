@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://www.enligne.parionssport.fdj.fr/paris-football/angleterre/premier-league"
+url = "https://www.enligne.parionssport.fdj.fr/paris-football/espagne/laliga"
 
 # Envoyer une requête GET à l'URL
 response = requests.get(url)
