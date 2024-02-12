@@ -31,3 +31,5 @@ if response.status_code == 200:
         print()  # Passer à la ligne suivante
 else:
     print("La requête GET a échoué avec le code :", response.status_code)
+
+print("Bonjour")
