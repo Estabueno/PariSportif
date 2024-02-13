@@ -7,6 +7,12 @@ conn = sqlite3.connect('Match_Pl.db')
 # Création d'un curseur pour exécuter des requêtes SQL 
 cur = conn.cursor()
 
+# Création de la table si elle n'existe pas déjà 
+cur.execute('''CREATE TABLE IF NOT EXISTS Matchs(
+    Match INTEGER PRIMARY KEY, Equipe_Domicile TEXT, Cotes_Equipe_Domicile INTEGER, 
+    Cotes_Nul INTEGER, Equipe_Extérieur TEXT,
+    Cotes_Equipe_Extérieur INTEGER)''')
+
 # Supprime les lignes de la table s'il elle a déjà été remplie.
 cur.execute('DELETE FROM Matchs')
 
@@ -15,12 +21,6 @@ conn.commit()
 
 # Supprime les pages inutiles
 cur.execute('VACUUM')
-
-# Création de la table si elle n'existe pas déjà 
-cur.execute('''CREATE TABLE IF NOT EXISTS Matchs(
-    Match INTEGER PRIMARY KEY, Equipe_Domicile TEXT, Cotes_Equipe_Domicile INTEGER, 
-    Cotes_Nul INTEGER, Equipe_Extérieur TEXT,
-    Cotes_Equipe_Extérieur INTEGER)''')
 
 home_team_value = Recover_Data_PL.Match_PL()['home_team']
 away_team_value = Recover_Data_PL.Match_PL()['away_team']
