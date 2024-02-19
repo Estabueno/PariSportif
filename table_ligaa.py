@@ -12,7 +12,7 @@ if response.status_code == 200:
 
     count = 0  # compter les lignes affichées
 
-    print("Classement\tÉquipe\tPoints\tMJ\tG\tD\tN\tButs\tEncaissés\tDifference")
+    print("Classement\tÉquipe\tPoints\tMJ\tG\tN\tD\tButs\tEncaissés\tDifference")
 
     for table in tables:
         team_containers = table.find_all('div', class_='styled__StandingTabBody-sc-e89col-0')
