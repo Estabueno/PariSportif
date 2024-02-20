@@ -1,12 +1,34 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://www.enligne.parionssport.fdj.fr/paris-football/angleterre/premier-league"
+# Fonction pour récupérer les noms des équipes
+def get_TeamName():
+    url = 'https://www.premierleague.com/clubs'
+    response = requests.get(url)
 
-# Envoyer une requête GET à l'URL
-response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        results = soup.find('div', class_='clubIndex col-12')
+        
+        if results:
+            data = []
+            teamsName = results.find_all('h2', class_='club-card__name')
+            
+            if teamsName:
+                for teams in teamsName:
+                    data.append(teams.text)
+                return data
+        else:
+            print("Aucun élément correspondant trouvé.")
+    else:
+        print("La requête a échoué. Code de statut : ", response.status_code)
 
 def Match_PL():
+    url = "https://www.enligne.parionssport.fdj.fr/paris-football/angleterre/premier-league"
+
+    # Envoyer une requête GET à l'URL
+    response = requests.get(url)
+
     # Vérifier si la requête a réussi (code 200)
     if response.status_code == 200:
         # Utiliser Beautiful Soup pour analyser le contenu de la page
@@ -50,5 +72,76 @@ def Match_PL():
                 i+=1
         
         return  {'home_team': home_team, 'away_team': away_team, 'draw' : draw, 'home_bet' : home_bet, 'away_bet' : away_bet}
+    else:
+        print("La requête GET a échoué avec le code :", response.status_code)
+        
+def Win_Lose():
+    url = "https://www.premierleague.com/tables"
+
+    # Envoyer une requête GET à l'URL
+    response = requests.get(url)
+
+    PlTeams = get_TeamName()
+    
+    # Vérifier si la requête a réussi (code 200)
+    if response.status_code == 200:
+        # Utiliser Beautiful Soup pour analyser le contenu de la page
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Récupérer les stats des équipes
+        home_team = Match_PL()['home_team']
+        away_team = Match_PL()['away_team']
+        
+        # Initialiser les listes pour stocker les données 
+        home_stat = []
+        away_stat = []
+
+        for homeTeam, awayTeam in zip (home_team, away_team):
+            # Comparaison des équipes
+            for teams in PlTeams:
+                if homeTeam == "Man. City":
+                    homeTeam = "Manchester City"
+                elif homeTeam == "Man. United":
+                    homeTeam = "Manchester United"
+                if awayTeam == "Man. City":
+                    awayTeam = "Manchester City"
+                elif awayTeam == "Man. United":
+                    awayTeam = "Manchester United"
+                if homeTeam[:5] == teams[:5]:
+                    homeTeam = teams
+                if awayTeam[:5] == teams[:5]:
+                    awayTeam = teams
+            
+            # Trouver la balise tr des équipes domiciles et extérieur
+            home = soup.find('tr', {'data-filtered-table-row-name': homeTeam})
+            away = soup.find('tr', {'data-filtered-table-row-name': awayTeam})
+            
+            if home:
+                # Filtrer la recherche
+                homeStat = home.find('td', class_="league-table__form form hideMed")
+                awayStat = away.find('td', class_="league-table__form form hideMed")
+                
+                # Trouver toutes les balises pour les 5 derniers matchs joués 
+                played_home = homeStat.find_all('abbr', class_="form-abbreviation")
+                played_away = awayStat.find_all('abbr', class_="form-abbreviation")
+                
+                if played_home:
+                    # Afficher le contenu et le récupérer 
+                    for plays in played_home:
+                        home_stat.append(plays.text.strip())
+                            
+                    # Afficher le contenu et le récupérer 
+                    for plays in played_away:
+                        away_stat.append(plays.text.strip())
+                else:
+                    print("Aucun élément correspondant trouvé pour les stats")
+            else:
+                print("Aucun élément correspondant trouvé pour l'équipe : ", homeTeam)
+                
+        # Découper la liste en tableaux de 5 en 5
+        home_stat = [home_stat[i:i+5] for i in range(0, len(home_stat), 5)]
+        away_stat = [away_stat[i:i+5] for i in range(0, len(away_stat), 5)]
+        print(home_stat[0])
+        return {'home_stat': home_stat, 'away_stat': away_stat}
     else:
         print("La requête GET a échoué avec le code :", response.status_code)
