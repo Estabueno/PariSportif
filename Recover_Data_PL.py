@@ -141,7 +141,6 @@ def Win_Lose():
         # Découper la liste en tableaux de 5 en 5
         home_stat = [home_stat[i:i+5] for i in range(0, len(home_stat), 5)]
         away_stat = [away_stat[i:i+5] for i in range(0, len(away_stat), 5)]
-        print(home_stat[0])
         return {'home_stat': home_stat, 'away_stat': away_stat}
     else:
         print("La requête GET a échoué avec le code :", response.status_code)
