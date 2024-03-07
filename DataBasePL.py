@@ -14,13 +14,15 @@ cur.execute('''CREATE TABLE IF NOT EXISTS Matchs(
     Cotes_Equipe_Extérieur INTEGER)''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS WinLoss(
-    Match INTEGER PRIMARY KEY, Equipe_Domicile TEXT, HomeWinLossDraw TEXT, 
-    Equipe_Extérieur TEXT,
-    AwayWinLossDraw TEXT)''')
+    Match INTEGER PRIMARY KEY, HomeWinLossDraw TEXT, AwayWinLossDraw TEXT)''')
+
+cur.execute('''CREATE TABLE IF NOT EXISTS Url_Logo(
+    Match INTEGER PRIMARY KEY, Equipe_Domicile_Url TEXT, Equipe_Extérieur_Url TEXT)''')
 
 # Supprime les lignes de la table s'il elle a déjà été remplie.
 cur.execute('DELETE FROM Matchs')
 cur.execute('DELETE FROM WinLoss')
+cur.execute('DELETE FROM Url_Logo')
 
 # Valider les modifications et fermer le curseur 
 conn.commit()
@@ -37,6 +39,9 @@ away_bets_value = Recover_Data_PL.Match_PL()['away_bet']
 home_winLoss = Recover_Data_PL.Win_Lose()['home_stat']
 away_winLoss = Recover_Data_PL.Win_Lose()['away_stat']
 
+home_url = Recover_Data_PL.get_TeamLogo()['home_url']
+away_url = Recover_Data_PL.get_TeamLogo()['away_url']
+
 for home, away, draw, home_bet, away_bet in zip(home_team_value, away_team_value, draw_bets_value, home_bets_value, away_bets_value):
     # Insertion de données dans la table
     cur.execute("INSERT INTO Matchs (Equipe_Domicile, Cotes_Equipe_Domicile, Cotes_Nul, Equipe_Extérieur, Cotes_Equipe_Extérieur) VALUES (?, ?, ?, ?, ?)", (home, home_bet, draw, away, away_bet)) 
@@ -44,8 +49,12 @@ for home, away, draw, home_bet, away_bet in zip(home_team_value, away_team_value
 i = 0
 for home, away in zip(home_team_value, away_team_value):
     # Insertion de données dans la table
-    cur.execute("INSERT INTO WinLoss (Equipe_Domicile, HomeWinLossDraw, Equipe_Extérieur, AwayWinLossDraw) VALUES (?, ?, ?, ?)", (home, ''.join(home_winLoss[i]), away, ''.join(away_winLoss[i]))) 
+    cur.execute("INSERT INTO WinLoss (HomeWinLossDraw, AwayWinLossDraw) VALUES (?, ?)", (''.join(home_winLoss[i]),''.join(away_winLoss[i]))) 
     i+=1
+    
+for home, away in zip(home_url, away_url):
+    # Insertion de données dans la table
+    cur.execute("INSERT INTO Url_Logo (Equipe_Domicile_Url, Equipe_Extérieur_Url) VALUES (?, ?)", (home, away)) 
     
 # Valider les modifications et fermer le curseur 
 conn.commit()

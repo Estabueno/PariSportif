@@ -144,3 +144,60 @@ def Win_Lose():
         return {'home_stat': home_stat, 'away_stat': away_stat}
     else:
         print("La requête GET a échoué avec le code :", response.status_code)
+            
+def get_TeamLogo():
+    url = "https://www.premierleague.com/tables"
+
+    # Envoyer une requête GET à l'URL
+    response = requests.get(url)
+
+    PlTeams = get_TeamName()
+    
+    # Vérifier si la requête a réussi (code 200)
+    if response.status_code == 200:
+        # Utiliser Beautiful Soup pour analyser le contenu de la page
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Récupérer les stats des équipes
+        home_team = Match_PL()['home_team']
+        away_team = Match_PL()['away_team']
+        
+        # Initialiser les listes pour stocker les données 
+        home_url = []
+        away_url = []
+
+        for homeTeam, awayTeam in zip (home_team, away_team):
+            # Comparaison des équipes
+            for teams in PlTeams:
+                if homeTeam == "Man. City":
+                    homeTeam = "Manchester City"
+                elif homeTeam == "Man. United":
+                    homeTeam = "Manchester United"
+                if awayTeam == "Man. City":
+                    awayTeam = "Manchester City"
+                elif awayTeam == "Man. United":
+                    awayTeam = "Manchester United"
+                if homeTeam[:5] == teams[:5]:
+                    homeTeam = teams
+                if awayTeam[:5] == teams[:5]:
+                    awayTeam = teams
+            
+            # Trouver la balise tr des équipes domiciles et extérieur
+            home = soup.find('tr', {'data-filtered-table-row-name': homeTeam})
+            away = soup.find('tr', {'data-filtered-table-row-name': awayTeam})
+            
+            if home:
+                home_tag = home.find('img')
+                away_tag = away.find('img')
+                home_src = home_tag.get('src')
+                away_src = away_tag.get('src')
+                home_url.append(home_src)
+                away_url.append(away_src)
+            else:
+                    print("Aucun élément correspondant trouvé")
+        else:
+                print("Aucun élément correspondant trouvé.")
+                
+        return {'home_url': home_url, 'away_url': away_url}
+    else:
+            print("La requête a échoué. Code de statut : ", response.status_code)
