@@ -136,6 +136,7 @@ def update_match_info(pathname, championship, match_info):
                 html.Div(f"{team1}", id='team1', style={'position': 'absolute', 'top': '150px', 'left': '100px', 'font-size': '30px', 'width': '200px'}),
                 html.Div(f"VS", id='VS', style={'position': 'absolute', 'top': '150px', 'left': '720px', 'font-size': '30px', 'width': '200px'}),
                 html.Div(f"{team2}", id='team2', style={'position': 'absolute', 'top': '150px', 'left': '1200px', 'font-size': '30px', 'width': '200px'}),
+                html.Div(f"Prochainement", id='next', style={'position': 'absolute', 'top': '300px', 'left': '600px', 'font-size': '50px', 'width': '200px'}),
             ])
         else:
             matches = resultats_pl
@@ -148,7 +149,6 @@ def update_match_info(pathname, championship, match_info):
                 url2 = url[2]
                 win1 = win_loss[1]
                 win2 = win_loss[2]
-                print(win1)
             layout2 = html.Div([
                 dcc.Link('Voir le tableau des Matchs', href='/'),
                 html.Div(f"MATCH", id='match', style={'position': 'absolute', 'top': '50px', 'left': '690px', 'font-size': '30px', 'width': '200px'}),
