@@ -28,14 +28,9 @@ Affiche le titre du championnat sélectionné.
 Liens pour voir les pronostics spécifiques à chaque match.
 
 4. Instructions d'utilisation
-Assurez-vous d'avoir les bibliothèques nécessaires installées (requests, beautifulsoup4, sqlite3, dash, dash_table, dash_bootstrap_components).
-
 Exécutez les scripts dans l'ordre suivant :
 
 DataBasePL.py et DataBaseLiga.py pour récupérer les données.
 interfaceDash.py pour visualiser les données.
 
 Les bases de données résultantes (Match_Pl.db et Match_Liga.db) seront créées avec les tables correspondantes.
-
-Remarque
-Les bases de données SQLite peuvent être consultées avec n'importe quel outil de gestion de base de données compatible SQLite.
