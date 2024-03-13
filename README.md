@@ -1,5 +1,5 @@
 # PariSportif
-Scripts Python pour la récupération et stockage de données de matchs de football
+Scripts Python pour la récupération et stockage de données de matchs de football.
 Ce projet contient des scripts Python conçus pour récupérer des données de matchs de football à partir de sites web, les traiter et les stocker dans des bases de données SQLite distinctes pour les ligues "La Liga" et "Premier League". Il inclut également une interface Web construite avec Dash pour visualiser les données stockées.
 
 1. Récupération des données
